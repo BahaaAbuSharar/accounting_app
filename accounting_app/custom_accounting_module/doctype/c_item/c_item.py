@@ -4,5 +4,5 @@
 # import frappe
 from frappe.model.document import Document
 
-class SalesInvoiceItem(Document):
+class C_Item(Document):
 	pass

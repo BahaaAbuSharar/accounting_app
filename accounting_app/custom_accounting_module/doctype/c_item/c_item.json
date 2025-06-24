@@ -49,7 +49,7 @@
  "modified": "2025-06-24 13:49:23.254502",
  "modified_by": "Administrator",
  "module": "Custom Accounting Module",
- "name": "Sales Invoice Item",
+ "name": "C_Item",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

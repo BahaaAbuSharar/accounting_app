@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "Fiscal Year-{year_name}",
+ "autoname": "format:Fiscal Year : {year_name}",
  "creation": "2025-06-23 20:05:23.268423",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -36,7 +36,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-06-24 11:40:47.337103",
+ "modified": "2025-06-24 18:20:37.981125",
  "modified_by": "Administrator",
  "module": "Custom Accounting Module",
  "name": "Fiscal Year",

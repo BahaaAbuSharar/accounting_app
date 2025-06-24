@@ -31,8 +31,9 @@
   },
   {
    "fieldname": "default_unit_of_measurement",
-   "fieldtype": "Data",
-   "label": "Default Unit of Measurement"
+   "fieldtype": "Select",
+   "label": "Default Unit of Measurement",
+   "options": "Piece\nBox\nCarton\nKilogram\nSquare Meter\nLiter\nMeter"
   },
   {
    "fieldname": "standard_selling_rate",
@@ -42,7 +43,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-06-24 11:40:41.890199",
+ "modified": "2025-06-24 17:32:19.753837",
  "modified_by": "Administrator",
  "module": "Custom Accounting Module",
  "name": "Item",

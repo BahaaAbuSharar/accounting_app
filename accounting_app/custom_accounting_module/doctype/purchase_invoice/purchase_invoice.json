@@ -2,92 +2,79 @@
  "actions": [],
  "allow_rename": 1,
  "autoname": "naming_series",
- "creation": "2025-06-24 13:58:57.665588",
+ "creation": "2025-06-24 18:59:32.670073",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
   "naming_series",
-  "customer",
+  "supplier",
   "posting_date",
   "payment_due_date",
   "items",
   "total_qty",
   "total_amount",
-  "debit_to",
-  "income_account",
+  "credit_to",
+  "expense_account",
   "amended_from"
  ],
  "fields": [
   {
    "fieldname": "naming_series",
-   "fieldtype": "Select",
-   "in_list_view": 1,
+   "fieldtype": "Data",
    "label": "Naming Series",
-   "options": "SI-.#####",
-   "reqd": 1
+   "options": "PI-.#####"
   },
   {
-   "fieldname": "customer",
+   "fieldname": "supplier",
    "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Customer",
-   "options": "Party",
-   "reqd": 1
+   "label": "Supplier",
+   "options": "Party"
   },
   {
    "fieldname": "posting_date",
    "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Posting Date",
-   "reqd": 1
+   "label": "Posting Date"
   },
   {
    "fieldname": "payment_due_date",
    "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Payment Due Date",
-   "reqd": 1
+   "label": "Payment Due Date"
   },
   {
    "fieldname": "items",
    "fieldtype": "Table",
    "label": "Items",
-   "options": "C_Item",
-   "reqd": 1
+   "options": "C_Item"
   },
   {
    "fieldname": "total_qty",
    "fieldtype": "Float",
-   "label": "Total Qty",
-   "reqd": 1
+   "label": "Total Qty"
   },
   {
    "fieldname": "total_amount",
    "fieldtype": "Currency",
-   "label": "Total Amount",
-   "reqd": 1
+   "label": "Total Amount"
   },
   {
-   "fieldname": "debit_to",
+   "fieldname": "credit_to",
    "fieldtype": "Link",
-   "label": "Debit To",
-   "options": "Account",
-   "reqd": 1
+   "label": "Credit To",
+   "options": "Account"
   },
   {
-   "fieldname": "income_account",
+   "fieldname": "expense_account",
    "fieldtype": "Link",
-   "label": "Income Account",
-   "options": "Account",
-   "reqd": 1
+   "label": "Expense Account",
+   "options": "Account"
   },
   {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Sales Invoice",
+   "options": "Purchase Invoice",
    "print_hide": 1,
    "read_only": 1
   }
@@ -95,10 +82,10 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-06-24 19:02:43.034138",
+ "modified": "2025-06-24 19:03:14.125601",
  "modified_by": "Administrator",
  "module": "Custom Accounting Module",
- "name": "Sales Invoice",
+ "name": "Purchase Invoice",
  "owner": "Administrator",
  "permissions": [
   {
