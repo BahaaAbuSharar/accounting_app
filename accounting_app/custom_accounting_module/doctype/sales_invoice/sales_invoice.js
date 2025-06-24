@@ -23,5 +23,5 @@ function calculate_amount(frm, cdt, cdn) {
         row.amount = 0;
     }
     frm.refresh_field('items');
-}
+} 
 
