@@ -2,9 +2,15 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Sales Invoice', {
-	// refresh: function(frm) {
-
-	// }
+	 setup: function(frm) {
+        frm.set_query('customer', () => {
+            return {
+                filters: {
+                    party_type: 'Customer'
+                }
+            };
+        });
+    }
 });
 frappe.ui.form.on('Sales Invoice Item', {
     qty: function(frm, cdt, cdn) {
