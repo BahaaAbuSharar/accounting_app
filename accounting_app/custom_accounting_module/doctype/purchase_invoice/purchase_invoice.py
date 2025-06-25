@@ -5,4 +5,11 @@
 from frappe.model.document import Document
 
 class PurchaseInvoice(Document):
-	pass
+	def validate(self):
+		self.total_qty = 0
+		self.total_amount = 0
+
+		for item in self.items:
+			item.amount = (item.qty or 0) * (item.rate or 0)
+			self.total_qty += item.qty or 0
+			self.total_amount += item.amount or 0

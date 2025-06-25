@@ -12,7 +12,20 @@ frappe.ui.form.on('Sales Invoice', {
         });
     }
 });
-frappe.ui.form.on('Sales Invoice Item', {
+frappe.ui.form.on('Invoice Item', {
+    item: function(frm, cdt, cdn) {
+        let row = locals[cdt][cdn];
+
+        if (row.item) {
+            frappe.db.get_value('Item', row.item, 'standard_selling_rate')
+                .then(r => {
+                    if (r.message) {
+                        frappe.model.set_value(cdt, cdn, 'rate', r.message.standard_selling_rate);
+                    }
+                });
+        }
+    },
+
     qty: function(frm, cdt, cdn) {
         calculate_amount(frm, cdt, cdn);
     },
