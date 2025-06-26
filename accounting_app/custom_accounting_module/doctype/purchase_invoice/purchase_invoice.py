@@ -1,7 +1,7 @@
 # Copyright (c) 2025, Bahaa and contributors
 # For license information, please see license.txt
 
-# import frappe
+import frappe
 from frappe.model.document import Document
 
 class PurchaseInvoice(Document):
@@ -13,7 +13,6 @@ class PurchaseInvoice(Document):
 			item.amount = (item.qty or 0) * (item.rate or 0)
 			self.total_qty += item.qty or 0
 			self.total_amount += item.amount or 0
-	def validate(self):
-         for item in self.invoice_item:
-           if item.rate is not None and item.rate < 0:
-                 frappe.throw(f"Item '{item.item}' has a Purchase rate in Sales Invoice.")
+
+			if item.rate is not None and item.rate < 0:
+					frappe.throw(f"Item '{item.item}' has a Purchase rate in Sales Invoice.")
