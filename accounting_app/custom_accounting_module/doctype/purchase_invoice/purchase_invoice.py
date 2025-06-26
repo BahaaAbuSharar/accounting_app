@@ -15,4 +15,4 @@ class PurchaseInvoice(Document):
 			self.total_amount += item.amount or 0
 
 			if item.rate is not None and item.rate < 0:
-					frappe.throw(f"Item '{item.item}' has a Purchase rate in Sales Invoice.")
+					frappe.throw(f"Item '{item.item}' has a negative rate in Sales Invoice.")
