@@ -13,3 +13,6 @@ class SalesInvoice(Document):
             item.amount = (item.qty or 0) * (item.rate or 0)
             self.total_qty += item.qty or 0
             self.total_amount += item.amount or 0
+
+            if item.rate is not None and item.rate < 0:
+                 frappe.throw(f"Item '{item.item}' has a negative rate in Sales Invoice.")

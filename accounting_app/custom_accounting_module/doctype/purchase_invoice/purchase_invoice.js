@@ -10,6 +10,11 @@ frappe.ui.form.on('Purchase Invoice', {
                 }
             };
         });
+    },
+    onload: function(frm) {
+        if (frm.is_new() && !frm.doc.posting_date) {
+            frm.set_value('posting_date', frappe.datetime.get_today());
+        }
     }
 });
 frappe.ui.form.on('Invoice Item', {
@@ -17,10 +22,10 @@ frappe.ui.form.on('Invoice Item', {
         let row = locals[cdt][cdn];
 
         if (row.item) {
-            frappe.db.get_value('Item', row.item, 'standard_selling_rate')
+            frappe.db.get_value('Item', row.item, 'standard_purchase_rate')
                 .then(r => {
                     if (r.message) {
-                        frappe.model.set_value(cdt, cdn, 'rate', r.message.standard_selling_rate);
+                        frappe.model.set_value(cdt, cdn, 'rate', r.message.standard_purchase_rate);
                     }
                 });
         }
