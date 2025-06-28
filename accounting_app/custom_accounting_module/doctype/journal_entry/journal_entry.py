@@ -15,6 +15,6 @@ class JournalEntry(Document):
 
     def check_balance(self):
         if round(self.difference, 2) != 0:
-            frappe.throw(_("القيد غير متوازن: مجموع المدين ({0}) لا يساوي مجموع الدائن ({1})").format(
+            frappe.throw(_("The restriction is unbalanced: the total debtor ({0}) is not equal to the total creditor ({1})").format(
                 self.total_debit, self.total_credit
             ))
