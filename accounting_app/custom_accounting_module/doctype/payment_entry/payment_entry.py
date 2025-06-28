@@ -1,8 +1,18 @@
-# Copyright (c) 2025, Bahaa and contributors
-# For license information, please see license.txt
-
-# import frappe
+import frappe
 from frappe.model.document import Document
 
 class PaymentEntry(Document):
-	pass
+    def validate(self):
+        # التأكد من تاريخ القيد
+        if not self.posting_date:
+            self.posting_date = frappe.utils.today()
+
+        # المبلغ يجب أن يكون موجبًا
+        if self.amount is None or self.amount <= 0:
+            frappe.throw("Amount must be greater than 0.")
+            
+        # التأكد من أن الحسابات المدفوعة منها والمدفوعة إليها ليست هي نفسها
+        if self.account_paid_from == self.account_paid_to:
+            frappe.throw("Source and Destination accounts cannot be the same.")
+
+ 

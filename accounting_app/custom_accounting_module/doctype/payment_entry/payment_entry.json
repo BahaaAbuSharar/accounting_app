@@ -42,21 +42,25 @@
   },
   {
    "fieldname": "party",
-   "fieldtype": "Dynamic Link",
+   "fieldtype": "Link",
    "label": "Party",
-   "options": "party_type"
+   "options": "Party"
   },
   {
    "fieldname": "account_paid_from",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Account Paid From",
-   "options": "Account"
+   "options": "Account",
+   "reqd": 1
   },
   {
    "fieldname": "account_paid_to",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Account Paid To",
-   "options": "Account"
+   "options": "Account",
+   "reqd": 1
   },
   {
    "fieldname": "amount",
@@ -76,7 +80,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-06-25 19:31:37.206916",
+ "modified": "2025-06-26 21:08:22.691483",
  "modified_by": "Administrator",
  "module": "Custom Accounting Module",
  "name": "Payment Entry",
