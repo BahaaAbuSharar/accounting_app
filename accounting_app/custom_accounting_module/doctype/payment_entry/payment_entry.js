@@ -11,4 +11,15 @@ frappe.ui.form.on('Payment Entry', {
         frm.set_value("account_paid_from", null);
         frm.set_value("account_paid_to", null);
     },
+
+    party_type: function(frm) {
+        // فلتر ديناميكي لحقل party بناءً على party_type
+        frm.set_query("party", () => {
+            return {
+                filters: {
+                    party_type: frm.doc.party_type
+                }
+            };
+        });
+    }
 });
