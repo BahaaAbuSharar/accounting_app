@@ -14,7 +14,7 @@ class JournalEntry(Document):
         self.difference = self.total_debit - self.total_credit
 
     def check_balance(self):
-        if round(self.difference, 2) != 0:
+        if self.difference != 0:
             frappe.throw(_("The restriction is unbalanced: the total debtor ({0}) is not equal to the total creditor ({1})").format(
                 self.total_debit, self.total_credit
             ))
