@@ -7,7 +7,11 @@ class GLEntry(Document):
         # مثال: منع تعيين قيمتين في نفس الوقت
         if self.debit_amount and self.credit_amount:
             frappe.throw("You cannot have both Debit and Credit values at the same time.")
-            
+
         # تعيين التاريخ الحالي إذا لم يكن موجودًا
         if not self.posting_date:
             self.posting_date = frappe.utils.today()
+            
+        # التأكد من أن المبلغ المدين أو الدائن موجود
+        if not self.debit_amount and not self.credit_amount:
+            frappe.throw("Either Debit or Credit must be entered.")            
