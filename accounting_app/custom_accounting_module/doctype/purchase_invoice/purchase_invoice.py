@@ -54,7 +54,6 @@ class PurchaseInvoice(Document):
 			"is_cancelled": 0
 		}).insert()
 
-		frappe.db.commit()
 
 	def make_gl_entries_reverse(self):
 		amount = self.total_amount
@@ -84,4 +83,3 @@ class PurchaseInvoice(Document):
 			"is_cancelled": 1
 		}).insert()
 
-		frappe.db.commit()
