@@ -14,13 +14,6 @@ class PaymentEntry(Document):
         # التأكد من أن الحسابات المدفوعة منها والمدفوعة إليها ليست هي نفسها
         if self.account_paid_from == self.account_paid_to:
             frappe.throw("Source and Destination accounts cannot be the same.")
-            
-        # التأكد من أن نوع الدفع يتناسب مع نوع الطرف
-        if self.party_type == "Supplier" and self.payment_type != "Pay":
-             frappe.throw("Payment Type must be 'Pay' when Party Type is Supplier.")
-
-        if self.party_type == "Customer" and self.payment_type != "Receive":
-            frappe.throw("Payment Type must be 'Receive' when Party Type is Customer.")
 
     def on_submit(self):
         self.make_gl_entries()
