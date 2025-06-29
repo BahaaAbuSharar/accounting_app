@@ -8,10 +8,7 @@ class SalesInvoice(Document):
     def validate(self):
         self.total_qty = 0
         self.total_amount = 0
-        # تحقق من التواريخ
-        if self.payment_due_date and self.posting_date:
-            if self.payment_due_date < self.posting_date:
-                frappe.throw("Payment Due Date cannot be before Posting Date.")		
+
 
         for item in self.items:
             item.amount = (item.qty or 0) * (item.rate or 0)
