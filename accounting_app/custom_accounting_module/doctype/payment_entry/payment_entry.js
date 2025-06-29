@@ -1,4 +1,14 @@
 frappe.ui.form.on('Payment Entry', {
+    // عند تغيير نوع الدفع أو الطرف
+    validate: function(frm) {
+        if (frm.doc.party_type === "Supplier" && frm.doc.payment_type !== "Pay") {
+            frappe.throw(__('Payment Type must be "Pay" when Party Type is Supplier'));
+        }
+
+        if (frm.doc.party_type === "Customer" && frm.doc.payment_type !== "Receive") {
+            frappe.throw(__('Payment Type must be "Receive" when Party Type is Customer'));
+        }
+    },
     onload: function(frm) {
         // افتراض تاريخ اليوم في أول تحميل
         if (frm.is_new() && !frm.doc.posting_date) {
