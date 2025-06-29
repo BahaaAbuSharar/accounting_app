@@ -16,3 +16,68 @@ class PurchaseInvoice(Document):
 
 			if item.rate is not None and item.rate < 0:
 					frappe.throw(f"Item '{item.item}' has a negative rate in Sales Invoice.")
+	def on_submit(self):
+		self.make_gl_entries()
+
+	def on_cancel(self):
+		self.make_gl_entries_reverse()
+
+	def make_gl_entries(self):
+		amount = self.total_amount
+
+		# القيود المحاسبية العادية
+		frappe.get_doc({
+			"doctype": "GL Entry",
+			"posting_date": self.posting_date,
+			"due_date": self.payment_due_date,
+			"party": self.supplier, 
+			"account": self.credit_to,
+			"debit_amount": amount,
+			"credit_amount": 0,
+			"voucher_type": "Purchase Invoice",
+			"voucher_number": self.name,
+			"is_cancelled": 0
+		}).insert()
+
+		frappe.get_doc({
+			"doctype": "GL Entry",
+			"posting_date": self.posting_date,
+			"account": self.expense_account,
+			"debit_amount": 0,
+			"credit_amount": amount,
+			"voucher_type": "Purchase Invoice",
+			"voucher_number": self.name,
+			"is_cancelled": 0
+		}).insert()
+
+		frappe.db.commit()
+
+	def make_gl_entries_reverse(self):
+		amount = self.total_amount
+
+		# عكس القيد عند الإلغاء
+		frappe.get_doc({
+			"doctype": "GL Entry",
+			"posting_date": self.posting_date,
+			"due_date": self.payment_due_date,
+			"party": self.supplier,
+			"account": self.credit_to,
+			"debit_amount": 0,
+			"credit_amount": amount,
+			"voucher_type": "Purchase Invoice",
+			"voucher_number": self.name,
+			"is_cancelled": 1
+		}).insert()
+
+		frappe.get_doc({
+			"doctype": "GL Entry",
+			"posting_date": self.posting_date,
+			"account": self.expense_account,
+			"debit_amount": amount,
+			"credit_amount": 0,
+			"voucher_type": "Purchase Invoice",
+			"voucher_number": self.name,
+			"is_cancelled": 1
+		}).insert()
+
+		frappe.db.commit()
