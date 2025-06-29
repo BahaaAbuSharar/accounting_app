@@ -63,13 +63,14 @@
   {
    "fieldname": "voucher_number",
    "fieldtype": "Dynamic Link",
+   "in_list_view": 1,
    "label": "Voucher Number",
    "options": "voucher_type"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-06-25 19:16:37.537058",
+ "modified": "2025-06-29 12:20:20.070025",
  "modified_by": "Administrator",
  "module": "Custom Accounting Module",
  "name": "GL Entry",
