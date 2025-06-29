@@ -16,3 +16,51 @@ class SalesInvoice(Document):
 
             if item.rate is not None and item.rate < 0:
                  frappe.throw(f"Item '{item.item}' has a negative rate in Sales Invoice.")
+    def on_submit(self):
+        self.make_gl_entries()
+
+    def on_cancel(self):
+        self.make_gl_entries(reverse=True)
+
+    def make_gl_entries(self, reverse=False):
+
+        amount = self.total_amount
+     # في حالة الإلغاء، نقلب القيد
+        if reverse:
+            debit_customer = 0
+            credit_customer = amount
+            debit_income = amount
+            credit_income = 0
+        else:
+            debit_customer = amount
+            credit_customer = 0
+            debit_income = 0
+            credit_income = amount
+
+        # قيد للعميل
+        frappe.get_doc({
+            "doctype": "GL Entry",
+            "posting_date": self.posting_date,
+            "due_date": self.payment_due_date,
+            "party": self.customer,
+            "account": self.debit_to,
+            "debit_amount": debit_customer,
+            "credit_amount": credit_customer,
+            "voucher_type": "Sales Invoice",
+            "voucher_number": self.name,
+            "is_cancelled": reverse
+        }).insert()
+
+        # قيد لحساب الدخل
+        frappe.get_doc({
+            "doctype": "GL Entry",
+            "posting_date": self.posting_date,
+            "account": self.income_account,
+            "debit_amount": debit_income,
+            "credit_amount": credit_income,
+            "voucher_type": "Sales Invoice",
+            "voucher_number": self.name,
+            "is_cancelled": reverse
+        }).insert()
+
+        frappe.db.commit()
