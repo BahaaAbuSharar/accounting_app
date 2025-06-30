@@ -60,8 +60,6 @@ class SalesInvoice(Document):
             "is_cancelled": 0
         }).insert()
 
-        frappe.db.commit()
-
 
     def make_gl_entries_reverse(self):
 
@@ -97,5 +95,3 @@ class SalesInvoice(Document):
             "voucher_number": self.name,
             "is_cancelled": 1
         }).insert()
-
-        frappe.db.commit()    
