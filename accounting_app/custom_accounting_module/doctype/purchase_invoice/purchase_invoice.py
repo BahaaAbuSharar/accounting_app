@@ -6,6 +6,7 @@ from frappe.model.document import Document
 
 class PurchaseInvoice(Document):
 	def validate(self):
+		self.validate_fiscal_year()
 		self.total_qty = 0
 		self.total_amount = 0
 		# تحقق من التواريخ
@@ -83,3 +84,12 @@ class PurchaseInvoice(Document):
 			"is_cancelled": 1
 		}).insert()
 
+	            
+	def validate_fiscal_year(self):
+		fiscal_year = frappe.db.exists("Fiscal Year", {
+			"start_date": ["<=", self.posting_date],
+			"end_date": [">=", self.posting_date]
+		})
+
+		if not fiscal_year:
+			frappe.throw("Posting date must fall within a valid Fiscal Year.")
