@@ -3,9 +3,11 @@
 
 import frappe
 from frappe.model.document import Document
+from accounting_app.custom_accounting_module.utils.validation import validate_fiscal_year
 
 class SalesInvoice(Document):
     def validate(self):
+        validate_fiscal_year(self.posting_date)
         self.total_qty = 0
         self.total_amount = 0
 
