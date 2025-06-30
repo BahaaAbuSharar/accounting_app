@@ -1,9 +1,10 @@
 import frappe
 from frappe.model.document import Document
+from accounting_app.custom_accounting_module.utils.validation import validate_fiscal_date
 
 class PaymentEntry(Document):
     def validate(self):
-        self.validate_fiscal_year()
+        validate_fiscal_date(self.posting_date)
         # التأكد من تاريخ القيد
         if not self.posting_date:
             self.posting_date = frappe.utils.today()
@@ -88,11 +89,3 @@ class PaymentEntry(Document):
             "is_cancelled": 1
         }).insert()
                 
-    def validate_fiscal_year(self):
-        fiscal_year = frappe.db.exists("Fiscal Year", {
-            "start_date": ["<=", self.posting_date],
-            "end_date": [">=", self.posting_date]
-        })
-
-        if not fiscal_year:
-            frappe.throw("Posting date must fall within a valid Fiscal Year.")
