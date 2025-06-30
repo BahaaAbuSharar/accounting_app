@@ -7,6 +7,9 @@ class JournalEntry(Document):
     def validate(self):
         self.calculate_totals()
         self.check_balance()
+        # التأكد من تاريخ القيد
+        if not self.posting_date:
+            self.posting_date = frappe.utils.today()
 
     def calculate_totals(self):
         self.total_debit = sum([d.debit or 0 for d in self.accounting_entries])
