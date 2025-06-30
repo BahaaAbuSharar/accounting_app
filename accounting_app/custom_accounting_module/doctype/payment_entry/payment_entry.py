@@ -1,8 +1,10 @@
 import frappe
 from frappe.model.document import Document
+from accounting_app.custom_accounting_module.utils.validation import validate_fiscal_year
 
 class PaymentEntry(Document):
     def validate(self):
+        validate_fiscal_year(self.posting_date)
         # التأكد من تاريخ القيد
         if not self.posting_date:
             self.posting_date = frappe.utils.today()
