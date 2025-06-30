@@ -3,10 +3,11 @@
 
 import frappe
 from frappe.model.document import Document
+from accounting_app.custom_accounting_module.utils.validation import validate_fiscal_date 
 
 class SalesInvoice(Document):
     def validate(self):
-        self.validate_fiscal_year()
+        validate_fiscal_date(self.posting_date)
         self.total_qty = 0
         self.total_amount = 0
 
@@ -98,12 +99,3 @@ class SalesInvoice(Document):
         }).insert()
 
         frappe.db.commit()    
-                
-    def validate_fiscal_year(self):
-        fiscal_year = frappe.db.exists("Fiscal Year", {
-            "start_date": ["<=", self.posting_date],
-            "end_date": [">=", self.posting_date]
-        })
-
-        if not fiscal_year:
-            frappe.throw("Posting date must fall within a valid Fiscal Year.")
