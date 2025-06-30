@@ -9,7 +9,7 @@ class JournalEntry(Document):
         self.check_balance()
         # التأكد من تاريخ القيد
         if not self.posting_date:
-            self.posting_date = frappe.utils.today()
+            frappe.throw(_("Posting date is required. Please set a valid posting date."))
 
     def calculate_totals(self):
         self.total_debit = sum([d.debit or 0 for d in self.accounting_entries])
