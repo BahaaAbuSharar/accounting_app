@@ -1,4 +1,10 @@
 frappe.ui.form.on("Journal Entry", {
+    onload: function(frm) {
+        // افتراض تاريخ اليوم في أول تحميل
+        if (frm.is_new() && !frm.doc.posting_date) {
+            frm.set_value('posting_date', frappe.datetime.get_today());
+        }
+    },
     validate: function (frm) {
         let total_debit = 0.0;
         let total_credit = 0.0;
