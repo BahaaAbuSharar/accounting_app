@@ -26,34 +26,18 @@ class JournalEntry(AccountingBase):
         self.make_gl_entries()
 
     def on_cancel(self):
-        self.make_gl_entries_reverse()
+        self.cancel_gl_entries()
 
-    def make_gl_entries(self):
-        for row in self.accounting_entries:
-            frappe.get_doc({
-                "doctype": "GL Entry",
-                "posting_date": self.posting_date,
-                "party": row.party,
-                "account": row.account,
-                "debit_amount": row.debit or 0,
-                "credit_amount": row.credit or 0,
-                "voucher_type": "Journal Entry",
-                "voucher_number": self.name,
-                "is_cancelled": 0,
-                "remarks": row.description
-            }).insert()
+    def get_gl_entries(self):
+        entries = []
 
-    def make_gl_entries_reverse(self):
-        for row in self.accounting_entries:
-            frappe.get_doc({
-                "doctype": "GL Entry",
-                "posting_date": self.posting_date,
-                "party": row.party,
+        for row in self.accounts:
+            entries.append({
                 "account": row.account,
-                "debit_amount": row.credit or 0,
-                "credit_amount": row.debit or 0,
-                "voucher_type": "Journal Entry",
-                "voucher_number": self.name,
-                "is_cancelled": 1,
-                "remarks": row.description
-            }).insert()
+                "party": row.party,
+                "debit": row.debit or 0,
+                "credit": row.credit or 0,
+            })
+
+        return entries
+
