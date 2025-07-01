@@ -5,7 +5,6 @@ def execute(filters=None):
 
     helper = AccountingReportHelper(filters)
     entries = helper.get_filtered_gl_entries()
-    entries = helper.add_running_balance(entries)
 
     columns = get_columns()
     return columns, entries

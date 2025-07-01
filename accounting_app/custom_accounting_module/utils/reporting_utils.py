@@ -6,31 +6,29 @@ class AccountingReportHelper:
         self.filters = filters or {}
 
     def get_filtered_gl_entries(self):
-        conditions = "1=1"
+        conditions = []
         if self.filters.get("from_date"):
-            conditions += f" AND posting_date >= '{self.filters['from_date']}'"
+            conditions.append(f"posting_date >= '{self.filters['from_date']}'")
         if self.filters.get("to_date"):
-            conditions += f" AND posting_date <= '{self.filters['to_date']}'"
+            conditions.append(f"posting_date <= '{self.filters['to_date']}'")
         if self.filters.get("account"):
-            conditions += f" AND account = '{self.filters['account']}'"
+            conditions.append(f"account = '{self.filters['account']}'")
         if self.filters.get("party"):
-            conditions += f" AND party = '{self.filters['party']}'"
+            conditions.append(f"party = '{self.filters['party']}'")
 
-        conditions += " AND is_cancelled = 0"
+        where_clause = " AND ".join(conditions)
+        if where_clause:
+            where_clause = "WHERE " + where_clause
 
         return frappe.db.sql(f"""
             SELECT
                 posting_date, account, party,
                 debit_amount AS debit, credit_amount AS credit,
-                voucher_type, voucher_number AS voucher_no
+                voucher_type, voucher_number AS voucher_no,
+                SUM(debit_amount - credit_amount) OVER (
+                ORDER BY posting_date, name
+              ) AS balance
             FROM `tabGL Entry`
-            WHERE {conditions}
+            {where_clause}
             ORDER BY posting_date, name
         """, as_dict=True)
-
-    def add_running_balance(self, entries):
-        balance = 0
-        for entry in entries:
-            balance += flt(entry.get("debit", 0)) - flt(entry.get("credit", 0))
-            entry["balance"] = balance
-        return entries
