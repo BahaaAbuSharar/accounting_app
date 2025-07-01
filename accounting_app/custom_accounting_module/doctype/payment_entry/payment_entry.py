@@ -20,71 +20,38 @@ class PaymentEntry(AccountingBase):
         self.make_gl_entries()
 
     def on_cancel(self):
-        self.make_gl_entries_reverse()
+        self.cancel_gl_entries()
 
-    def make_gl_entries(self):
-        # حسب نوع الدفع
+    def get_gl_entries(self):
+        amount = self.paid_amount
+
         if self.payment_type == "Receive":
-            debit_account = self.account_paid_to
-            credit_account = self.account_paid_from
-        else :# self.payment_type == "Pay"
-            debit_account = self.account_paid_from
-            credit_account = self.account_paid_to
+            return [
+                {
+                    "account": self.paid_to,  # البنك
+                    "debit": amount,
+                    "credit": 0,
+                },
+                {
+                    "account": self.paid_from,  # حساب الزبون
+                    "party": self.party,
+                    "debit": 0,
+                    "credit": amount,
+                }
+            ]
+        elif self.payment_type == "Pay":
+            return [
+                {
+                    "account": self.paid_from,  # البنك
+                    "credit": amount,
+                    "debit": 0,
+                },
+                {
+                    "account": self.paid_to,  # حساب المورد
+                    "party": self.party,
+                    "debit": amount,
+                    "credit": 0,
+                }
+            ]
 
-        frappe.get_doc({
-            "doctype": "GL Entry",
-            "posting_date": self.posting_date,
-            "party": self.party,
-            "account": debit_account,
-            "debit_amount": self.amount,
-            "credit_amount": 0,
-            "voucher_type": "Payment Entry",
-            "voucher_number": self.name,
-            "is_cancelled": 0
-        }).insert()
-
-        frappe.get_doc({
-            "doctype": "GL Entry",
-            "posting_date": self.posting_date,
-            "party": self.party,
-            "account": credit_account,
-            "debit_amount": 0,
-            "credit_amount": self.amount,
-            "voucher_type": "Payment Entry",
-            "voucher_number": self.name,
-            "is_cancelled": 0
-        }).insert()
-
-    def make_gl_entries_reverse(self):
-        # قلب القيود
-        if self.payment_type == "Receive":
-            debit_account = self.account_paid_to
-            credit_account = self.account_paid_from
-        else :
-            debit_account = self.account_paid_from
-            credit_account = self.account_paid_to
-
-        frappe.get_doc({
-            "doctype": "GL Entry",
-            "posting_date": self.posting_date,
-            "party": self.party,
-            "account": debit_account,
-            "debit_amount": self.amount,
-            "credit_amount": 0,
-            "voucher_type": "Payment Entry",
-            "voucher_number": self.name,
-            "is_cancelled": 1
-        }).insert()
-
-        frappe.get_doc({
-            "doctype": "GL Entry",
-            "posting_date": self.posting_date,
-            "party": self.party,
-            "account": credit_account,
-            "debit_amount": 0,
-            "credit_amount": self.amount,
-            "voucher_type": "Payment Entry",
-            "voucher_number": self.name,
-            "is_cancelled": 1
-        }).insert()
 
