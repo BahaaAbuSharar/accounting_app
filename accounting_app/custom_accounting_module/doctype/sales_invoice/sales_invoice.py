@@ -22,75 +22,21 @@ class SalesInvoice(AccountingBase):
         self.make_gl_entries()
 
     def on_cancel(self):
-        self.make_gl_entries_reverse()
+        self.cancel_gl_entries()
 
-    def make_gl_entries(self, reverse=False):
-
+    def get_gl_entries(self):
         amount = self.total_amount
-  
-        debit_customer = amount
-        credit_customer = 0
-        debit_income = 0
-        credit_income = amount
 
-        # قيد للعميل
-        frappe.get_doc({
-            "doctype": "GL Entry",
-            "posting_date": self.posting_date,
-            "due_date": self.payment_due_date,
-            "party": self.customer,
-            "account": self.debit_to,
-            "debit_amount": debit_customer,
-            "credit_amount": credit_customer,
-            "voucher_type": "Sales Invoice",
-            "voucher_number": self.name,
-            "is_cancelled": 0
-        }).insert()
-
-        # قيد لحساب الدخل
-        frappe.get_doc({
-            "doctype": "GL Entry",
-            "posting_date": self.posting_date,
-            "account": self.income_account,
-            "debit_amount": debit_income,
-            "credit_amount": credit_income,
-            "voucher_type": "Sales Invoice",
-            "voucher_number": self.name,
-            "is_cancelled": 0
-        }).insert()
-
-
-    def make_gl_entries_reverse(self):
-
-        amount = self.total_amount
-        debit_customer = 0
-        credit_customer = amount
-        debit_income = amount
-        credit_income = 0
-
-
-        # قيد للعميل
-        frappe.get_doc({
-            "doctype": "GL Entry",
-            "posting_date": self.posting_date,
-            "due_date": self.payment_due_date,
-            "party": self.customer,
-            "account": self.debit_to,
-            "debit_amount": debit_customer,
-            "credit_amount": credit_customer,
-            "voucher_type": "Sales Invoice",
-            "voucher_number": self.name,
-            "is_cancelled": 1
-        }).insert()
-
-        # قيد لحساب الدخل
-        frappe.get_doc({
-            "doctype": "GL Entry",
-            "posting_date": self.posting_date,
-            "account": self.income_account,
-            "debit_amount": debit_income,
-            "credit_amount": credit_income,
-            "voucher_type": "Sales Invoice",
-            "voucher_number": self.name,
-            "is_cancelled": 1
-        }).insert()
+        return [
+            {
+                "account": self.debit_to,  # حساب العميل
+                "party": self.customer,
+                "debit": amount,
+                "credit": 0,
+            },
+            {
+                "account": self.income_account,  # حساب الدخل
+                "debit": 0,
+                "credit": amount,
+            }
+        ]
