@@ -25,62 +25,23 @@ class PurchaseInvoice(AccountingBase):
 		self.make_gl_entries()
 
 	def on_cancel(self):
-		self.make_gl_entries_reverse()
+		self.cancel_gl_entries()
 
-	def make_gl_entries(self):
+	def get_gl_entries(self):
 		amount = self.total_amount
 
-		# القيود المحاسبية العادية
-		frappe.get_doc({
-			"doctype": "GL Entry",
-			"posting_date": self.posting_date,
-			"due_date": self.payment_due_date,
-			"party": self.supplier, 
-			"account": self.credit_to,
-			"debit_amount": amount,
-			"credit_amount": 0,
-			"voucher_type": "Purchase Invoice",
-			"voucher_number": self.name,
-			"is_cancelled": 0
-		}).insert()
+		return [
+			{
+				"account": self.expense_account,  # حساب المشتريات
+				"debit": amount,
+				"credit": 0,
+			},
+			{
+				"account": self.credit_to,  # حساب المورد
+				"party": self.supplier,
+				"debit": 0,
+				"credit": amount,
+			}
+		]
 
-		frappe.get_doc({
-			"doctype": "GL Entry",
-			"posting_date": self.posting_date,
-			"account": self.expense_account,
-			"debit_amount": 0,
-			"credit_amount": amount,
-			"voucher_type": "Purchase Invoice",
-			"voucher_number": self.name,
-			"is_cancelled": 0
-		}).insert()
-
-
-	def make_gl_entries_reverse(self):
-		amount = self.total_amount
-
-		# عكس القيد عند الإلغاء
-		frappe.get_doc({
-			"doctype": "GL Entry",
-			"posting_date": self.posting_date,
-			"due_date": self.payment_due_date,
-			"party": self.supplier,
-			"account": self.credit_to,
-			"debit_amount": 0,
-			"credit_amount": amount,
-			"voucher_type": "Purchase Invoice",
-			"voucher_number": self.name,
-			"is_cancelled": 1
-		}).insert()
-
-		frappe.get_doc({
-			"doctype": "GL Entry",
-			"posting_date": self.posting_date,
-			"account": self.expense_account,
-			"debit_amount": amount,
-			"credit_amount": 0,
-			"voucher_type": "Purchase Invoice",
-			"voucher_number": self.name,
-			"is_cancelled": 1
-		}).insert()
 
