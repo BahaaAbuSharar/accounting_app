@@ -2,12 +2,11 @@
 # For license information, please see license.txt
 
 import frappe
-from frappe.model.document import Document
-from accounting_app.custom_accounting_module.utils.validation import validate_fiscal_year
+from accounting_app.custom_accounting_module.utils.accounting_base import AccountingBase
 
-class PurchaseInvoice(Document):
+class PurchaseInvoice(AccountingBase):
 	def validate(self):
-		validate_fiscal_year(self.posting_date)
+		self.validate_fiscal_year(self.posting_date)
 		self.total_qty = 0
 		self.total_amount = 0
 		# تحقق من التواريخ
