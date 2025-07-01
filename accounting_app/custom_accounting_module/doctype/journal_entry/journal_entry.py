@@ -1,10 +1,11 @@
 import frappe
 from frappe import _
-from frappe.model.document import Document
+from accounting_app.custom_accounting_module.utils.accounting_base import AccountingBase
 
 
-class JournalEntry(Document):
+class JournalEntry(AccountingBase):
     def validate(self):
+        self.validate_fiscal_year(self.posting_date)
         self.calculate_totals()
         self.check_balance()
         # التأكد من تاريخ القيد
