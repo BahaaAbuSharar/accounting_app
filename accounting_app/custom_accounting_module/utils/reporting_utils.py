@@ -47,3 +47,14 @@ class AccountingReportHelper:
         """
 
         return frappe.db.sql(query, values, as_dict=True)
+    def group_by_account(self, entries):
+        summary = {}
+        for entry in entries:
+            acct = entry["account"]
+            if acct not in summary:
+                summary[acct] = {"debit": 0.0, "credit": 0.0}
+            summary[acct]["debit"] += flt(entry.get("debit", 0))
+            summary[acct]["credit"] += flt(entry.get("credit", 0))
+        return summary
+    def get_account_name(self, account):
+        return frappe.db.get_value("Account", account, "account_name") or ""
