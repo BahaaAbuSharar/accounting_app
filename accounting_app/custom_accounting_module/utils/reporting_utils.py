@@ -5,7 +5,7 @@ class AccountingReportHelper:
     def __init__(self, filters=None):
         self.filters = filters or {}
 
-    def get_filtered_gl_entries(self):
+    def get_filtered_gl_entries(self , with_balance=False):
         conditions = []
         values = []
         if self.filters.get("from_date"):
@@ -25,15 +25,25 @@ class AccountingReportHelper:
         if where_clause:
             where_clause = "WHERE " + where_clause
 
-        return frappe.db.sql(f"""
-            SELECT
-                posting_date, account, party,
-                debit_amount AS debit, credit_amount AS credit,
-                voucher_type, voucher_number AS voucher_no,
+        fields = [
+            "posting_date", "account", "party",
+            "debit_amount AS debit", "credit_amount AS credit",
+            "voucher_type", "voucher_number AS voucher_no"
+        ]
+
+        if with_balance:
+            fields.append("""
                 SUM(debit_amount - credit_amount) OVER (
-                ORDER BY posting_date, name
-              ) AS balance
+                    ORDER BY posting_date, name
+                ) AS balance
+            """)
+
+        query = f"""
+            SELECT
+                {', '.join(fields)}
             FROM `tabGL Entry`
             {where_clause}
             ORDER BY posting_date, name
-        """, values ,as_dict=True)
+        """
+
+        return frappe.db.sql(query, values, as_dict=True)
