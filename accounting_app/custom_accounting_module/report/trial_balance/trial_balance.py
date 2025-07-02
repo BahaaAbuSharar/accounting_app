@@ -5,7 +5,7 @@ from frappe.utils import flt
 def execute(filters=None):
     filters = filters or {}
     helper = AccountingReportHelper(filters)
-    entries = helper.get_filtered_gl_entries()
+    entries = helper.get_filtered_gl_entries(include_account_number=True)
     summary = helper.group_by_account(entries)
 
     data = []

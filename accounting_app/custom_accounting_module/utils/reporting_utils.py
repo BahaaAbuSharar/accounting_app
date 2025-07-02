@@ -5,7 +5,7 @@ class AccountingReportHelper:
     def __init__(self, filters=None):
         self.filters = filters or {}
 
-    def get_filtered_gl_entries(self , with_balance=False):
+    def get_filtered_gl_entries(self , with_balance=False , include_account_number=False):
         conditions = []
         values = []
         if self.filters.get("from_date"):
@@ -26,10 +26,19 @@ class AccountingReportHelper:
             where_clause = "WHERE " + where_clause
 
         fields = [
-            "posting_date", "account", "party",
-            "debit_amount AS debit", "credit_amount AS credit",
-            "voucher_type", "voucher_number AS voucher_no"
+            "e.posting_date",
+            "e.account",
+            "e.party",
+            "e.debit_amount AS debit",
+            "e.credit_amount AS credit",
+            "e.voucher_type",
+            "e.voucher_number AS voucher_no"
         ]
+        if include_account_number:
+            fields.append("a.account_number")
+            join_clause = "LEFT JOIN `tabAccount` a ON e.account = a.name"
+        else:
+            join_clause = ""
 
         if with_balance:
             fields.append("""
@@ -41,7 +50,8 @@ class AccountingReportHelper:
         query = f"""
             SELECT
                 {', '.join(fields)}
-            FROM `tabGL Entry`
+            FROM `tabGL Entry` e
+            {join_clause}
             {where_clause}
             ORDER BY posting_date, name
         """
