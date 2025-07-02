@@ -5,21 +5,20 @@ from frappe.utils import flt
 def execute(filters=None):
     filters = filters or {}
     helper = AccountingReportHelper(filters)
-    entries = helper.get_filtered_gl_entries(include_account_number=True)
-    summary = helper.group_by_account(entries)
+    entries = helper.get_filtered_gl_entries(include_account_number=True , grouped=True)
 
     data = []
-    for account, amounts in summary.items():
-        debit = flt(amounts.get("debit", 0))
-        credit = flt(amounts.get("credit", 0))
+    for entry in entries:
+        debit = flt(entry.get("debit", 0))
+        credit = flt(entry.get("credit", 0))
         balance = debit - credit
         data.append({
-            "account": account,
-            "account_name": helper.get_account_name(account),
-            "debit": debit,
-            "credit": credit,
-            "balance": balance
-        })
+				"account": entry.get("account"),
+				"account_name": entry.get("account_name", ""),
+				"debit": debit,
+				"credit": credit,
+				"balance": balance
+			})
 
     columns = get_columns()
     return columns, data
