@@ -57,4 +57,4 @@ class AccountingReportHelper:
             summary[acct]["credit"] += flt(entry.get("credit", 0))
         return summary
     def get_account_name(self, account):
-        return frappe.db.get_value("Account", account, "account_name") or ""
+        return frappe.db.get_value("Account", account, "account_number") or ""
