@@ -7,14 +7,19 @@ class AccountingReportHelper:
 
     def get_filtered_gl_entries(self):
         conditions = []
+        values = []
         if self.filters.get("from_date"):
-            conditions.append(f"posting_date >= '{self.filters['from_date']}'")
+            conditions.append("posting_date >= %s")
+            values.append(self.filters["from_date"])
         if self.filters.get("to_date"):
-            conditions.append(f"posting_date <= '{self.filters['to_date']}'")
+            conditions.append("posting_date <= %s")
+            values.append(self.filters["to_date"])
         if self.filters.get("account"):
-            conditions.append(f"account = '{self.filters['account']}'")
+            conditions.append("account = %s")
+            values.append(self.filters["account"])
         if self.filters.get("party"):
-            conditions.append(f"party = '{self.filters['party']}'")
+            conditions.append("party = %s")
+            values.append(self.filters["party"])
 
         where_clause = " AND ".join(conditions)
         if where_clause:
@@ -31,4 +36,4 @@ class AccountingReportHelper:
             FROM `tabGL Entry`
             {where_clause}
             ORDER BY posting_date, name
-        """, as_dict=True)
+        """, values ,as_dict=True)
