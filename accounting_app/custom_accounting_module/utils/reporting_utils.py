@@ -66,5 +66,3 @@ class AccountingReportHelper:
             summary[acct]["debit"] += flt(entry.get("debit", 0))
             summary[acct]["credit"] += flt(entry.get("credit", 0))
         return summary
-    def get_account_name(self, account):
-        return frappe.db.get_value("Account", account, "account_number") or ""
