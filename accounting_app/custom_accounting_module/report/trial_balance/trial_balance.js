@@ -18,12 +18,6 @@ frappe.query_reports["Trial Balance"] = {
             label: "Account",
             fieldtype: "Link",
             options: "Account"
-        },
-        {
-            fieldname: "include_cancelled_entries",
-            label: "Include Cancelled Entries",
-            fieldtype: "Check",
-            default: 0
         }
     ]
 };
