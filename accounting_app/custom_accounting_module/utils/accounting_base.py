@@ -22,10 +22,10 @@ class AccountingBase(Document):
                 "posting_date": self.posting_date,
                 "account": entry.get("account"),
                 "party": entry.get("party"),
-                "debit": entry.get("debit", 0),
-                "credit": entry.get("credit", 0),
+                "debdebit_amountit": entry.get("debit", 0),
+                "credit_amount": entry.get("credit", 0),
                 "voucher_type": self.doctype,
-                "voucher_no": self.name,
+                "voucher_number": self.name,
                 "is_cancelled": 0,
             })
             gl_entry.insert()
@@ -40,10 +40,10 @@ class AccountingBase(Document):
                 "posting_date": self.posting_date,
                 "account": entry.get("account"),
                 "party": entry.get("party"),
-                "debit": entry.get("credit", 0),   # عكس القيود
-                "credit": entry.get("debit", 0),
+                "debit_amount": entry.get("credit", 0),   # عكس القيود
+                "credit_amount": entry.get("debit", 0),
                 "voucher_type": self.doctype,
-                "voucher_no": self.name,
+                "voucher_number": self.name,
                 "is_cancelled": 1,
             })
             gl_entry.insert()
