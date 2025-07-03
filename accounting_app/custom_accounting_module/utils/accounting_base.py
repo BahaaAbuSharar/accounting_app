@@ -3,10 +3,10 @@ from frappe.model.document import Document
 
 class AccountingBase(Document):
 
-    def validate_fiscal_year(self):
+    def validate_fiscal_year(self, posting_date):
         fiscal_year = frappe.db.exists("Fiscal Year", {
-            "start_date": ["<=", self.posting_date],
-            "end_date": [">=", self.posting_date]
+            "start_date": ["<=", posting_date],
+            "end_date": [">=", posting_date]
         })
 
         if not fiscal_year:
